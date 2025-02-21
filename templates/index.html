@@ -10,16 +10,16 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../script/styles.css" />
+    <link rel="stylesheet" href="../static/styles.css" />
   </head>
   <body>
     <!-- Main Header Section -->
     <header class="header">
       <!-- Background Video -->
       <video class="background-video" autoplay muted loop preload="auto">
-        <source src="../gallery/robot_dance.mp4" type="video/mp4" />
+        <source src="{{ url_for('serve_gallery', filename='robot_dance.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
-      </video>
+    </video>
       <script>
         const video = document.querySelector(".background-video");
 
@@ -35,11 +35,11 @@
         <div class="logo">Jarvis.AI</div>
 
         <div class="nav-links">
-          <a href="index.html" class="active">Home</a>
-          <a href="about.html">About</a>
-          <a href="contact.html">Contact</a>
-          <a href="auth.html" id="authLink">Login/Signup</a>
-        </div>
+          <a href="{{ url_for('index') }}">Home</a>
+          <a href="{{ url_for('about') }}">About</a>
+          <a href="{{ url_for('contact') }}">Contact</a>
+          <a href="{{ url_for('auth') }}" class="active">Login/Signup</a>
+      </div>
 
         <!-- Mobile Navigation Toggle -->
         <div class="hamburger">
@@ -68,6 +68,6 @@
         </div>
       </div>
     </header>
-    <script src="../script.js"></script>
+    <script src="../static/script.js"></script>
   </body>
 </html>

@@ -1,50 +1,70 @@
-from flask import Flask, request, jsonify
+from flask import request, jsonify
+from flask_cors import CORS
 import sqlite3
 import hashlib
-from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)
+def setup_auth_routes(app):
+    CORS(app)
 
-# Function to hash passwords
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-
-# Signup API endpoint
-@app.route('/api/signup', methods=['POST'])
-def signup():
-    try:
-        # Get the data sent from the frontend
-        data = request.json
-        first_name = data['firstName']
-        last_name = data['lastName']
-        email = data['email']
-        password = hash_password(data['password'])  # Hash the password for security
-
-        # Connect to the database
+    def init_db():
         conn = sqlite3.connect('backend/database/user.db')
         cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                first_name TEXT NOT NULL,
+                last_name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        conn.commit()
+        conn.close()
 
-        # Try to insert the user into the database
+    # Initialize database
+    init_db()
+
+    def hash_password(password):
+        return hashlib.sha256(password.encode()).hexdigest()
+
+    @app.route('/api/signup', methods=['POST'])
+    def signup():
         try:
-            cursor.execute("""
-                INSERT INTO users (first_name, last_name, email, password)
-                VALUES (?, ?, ?, ?)
-            """, (first_name, last_name, email, password))
+            data = request.json
+            first_name = data['firstName']
+            last_name = data['lastName']
+            email = data['email']
+            password = hash_password(data['password'])
 
-            conn.commit()
-            return jsonify({'success': True, 'message': 'User registered successfully'})
+            conn = sqlite3.connect('backend/database/user.db')
+            cursor = conn.cursor()
 
-        except sqlite3.IntegrityError:
-            # Handle duplicate email error
-            return jsonify({'success': False, 'message': 'Email already exists'}), 409
+            try:
+                cursor.execute("""
+                    INSERT INTO users (first_name, last_name, email, password)
+                    VALUES (?, ?, ?, ?)
+                """, (first_name, last_name, email, password))
 
-        finally:
-            conn.close()
+                conn.commit()
+                return jsonify({
+                    'success': True,
+                    'message': 'User registered successfully'
+                })
 
-    except Exception as e:
-        # Handle any other errors
-        return jsonify({'success': False, 'message': str(e)}), 500
+            except sqlite3.IntegrityError:
+                return jsonify({
+                    'success': False,
+                    'message': 'Email already exists'
+                }), 409
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5002)  # Use port 5001 instead of 5000
+            finally:
+                conn.close()
+
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': str(e)
+            }), 500
+
+    return app

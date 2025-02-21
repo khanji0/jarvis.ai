@@ -8,8 +8,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../script/styles.css" />
-    <link rel="stylesheet" href="../script/auth.css" />
+    <link rel="stylesheet" href="../static/styles.css" />
+    <link rel="stylesheet" href="../static/auth.css" />
   </head>
   <body>
     <header class="header">
@@ -30,11 +30,11 @@
       <nav class="main-nav">
         <div class="logo">Jarvis.AI</div>
         <div class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="about.html">About</a>
-          <a href="contact.html">Contact</a>
-          <a href="auth.html" class="active">Login/Signup</a>
-        </div>
+          <a href="{{ url_for('index') }}">Home</a>
+          <a href="{{ url_for('about') }}">About</a>
+          <a href="{{ url_for('contact') }}">Contact</a>
+          <a href="{{ url_for('auth') }}" class="active">Login/Signup</a>
+      </div>
         <div class="hamburger">
           <span></span>
           <span></span>
@@ -92,40 +92,74 @@
     </header>
 
     <script>
-      // Tab switching functionality
-      const tabs = document.querySelectorAll(".auth-tab");
-      const forms = document.querySelectorAll(".auth-form");
 
-      tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-          // Remove active class from all tabs and forms
+  // Tab switching functionality (keep existing code)
+  const tabs = document.querySelectorAll(".auth-tab");
+  const forms = document.querySelectorAll(".auth-form");
+
+  tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
           tabs.forEach((t) => t.classList.remove("active"));
           forms.forEach((f) => f.classList.remove("active"));
-
-          // Add active class to clicked tab and corresponding form
           tab.classList.add("active");
-          document
-            .querySelector(`#${tab.dataset.tab}Form`)
-            .classList.add("active");
-        });
+          document.querySelector(`#${tab.dataset.tab}Form`).classList.add("active");
       });
+  });
 
-      // Form submission handling
-      const loginForm = document.getElementById("loginForm");
-      const signupForm = document.getElementById("signupForm");
+  // Updated form handling
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
 
-      loginForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        // Add your login logic here
-        console.log("Login submitted");
-      });
+  // Signup form handler
+  signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      // Get form values
+      const userData = {
+          firstName: document.getElementById("firstName").value,
+          lastName: document.getElementById("lastName").value,
+          email: document.getElementById("signupEmail").value,
+          password: document.getElementById("signupPassword").value,
+          confirmPassword: document.getElementById("confirmPassword").value
+      };
 
-      signupForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        // Add your signup logic here
-        console.log("Signup submitted");
-      });
-    </script>
-    <script src="../script.js"></script>
+      // Basic validation
+      if (userData.password !== userData.confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+      }
+
+      try {
+          const response = await fetch('http://localhost:5002/api/signup', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(userData)
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+              alert("Signup successful! Please login.");
+              // Switch to login tab
+              document.querySelector('[data-tab="login"]').click();
+          } else {
+              alert(data.message || "Signup failed!");
+          }
+      } catch (error) {
+          console.error('Error:', error);
+          alert("An error occurred during signup!");
+      }
+  });
+
+  // Login form handler (to be implemented)
+  loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      // Login logic will be implemented later
+      console.log("Login submitted");
+  });
+  </script>
+    <script src="../static/script.js"></script>
   </body>
 </html>
