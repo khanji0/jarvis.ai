@@ -1,0 +1,6 @@
+Flask
+Flask-Mail
+psycopg2-binary
+Werkzeug
+config
+flask_cors 

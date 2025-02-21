@@ -1,33 +1,67 @@
-function sendMessage() {
-    const input = document.getElementById('userInput');
-    const message = input.value.trim();
-    
-    if (message) {
-        const chatMessages = document.getElementById('chatMessages');
-        
-        // Add user message
-        const userDiv = document.createElement('div');
-        userDiv.className = 'message user-message';
-        userDiv.textContent = message;
-        chatMessages.appendChild(userDiv);
-        
-        // Add AI message (you'll need to implement actual AI response logic)
-        const aiDiv = document.createElement('div');
-        aiDiv.className = 'message ai-message';
-        aiDiv.textContent = "I'm JARVIS.AI. I'm processing your request...";
-        chatMessages.appendChild(aiDiv);
-        
-        // Clear input
-        input.value = '';
-        
-        // Scroll to bottom
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+// script.js
+class AIAssistant {
+  constructor() {
+    this.chatMessages = document.getElementById("chatMessages");
+    this.userInput = document.getElementById("userInput");
+    this.initializeEventListeners();
+  }
+
+  initializeEventListeners() {
+    // Enter key event listener
+    this.userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        this.handleUserMessage();
+      }
+    });
+  }
+
+  handleUserMessage() {
+    const message = this.userInput.value.trim();
+    if (!message) return;
+
+    // Display user message
+    this.addMessageToChat(message, "user-message");
+
+    // Display AI response
+    this.generateAIResponse(message);
+
+    // Clear input field
+    this.userInput.value = "";
+
+    // Scroll to latest message
+    this.scrollToBottom();
+  }
+
+  addMessageToChat(message, className) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${className}`;
+    messageDiv.textContent = message;
+    this.chatMessages.appendChild(messageDiv);
+  }
+
+  generateAIResponse(userMessage) {
+    // Placeholder for AI response logic
+    const aiResponse = "I'm your AI Assistant. I'm processing your request...";
+    this.addMessageToChat(aiResponse, "ai-message");
+  }
+
+  scrollToBottom() {
+    this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+  }
 }
 
-// Allow sending message with Enter key
-document.getElementById('userInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
+// Initialize AI Assistant
+const assistant = new AIAssistant();
+
+// Global send message function (for onclick event)
+function sendMessage() {
+  assistant.handleUserMessage();
+}
+
+const video = document.querySelector(".background-video");
+
+// Ensure seamless looping
+video.addEventListener("ended", () => {
+  video.currentTime = 0; // Reset to the beginning
+  video.play(); // Start playing again
 });

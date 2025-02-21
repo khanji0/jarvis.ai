@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authentication - Jarvis.AI</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../script/styles.css" />
+    <link rel="stylesheet" href="../script/auth.css" />
+  </head>
+  <body>
+    <header class="header">
+      <!-- Background Video -->
+      <video class="background-video" autoplay muted loop preload="auto">
+        <source src="../gallery/robot_dance.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <script>
+        const video = document.querySelector(".background-video");
+        video.addEventListener("ended", () => {
+          video.currentTime = 0;
+          video.play();
+        });
+      </script>
+
+      <!-- Navigation Bar -->
+      <nav class="main-nav">
+        <div class="logo">Jarvis.AI</div>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="auth.html" class="active">Login/Signup</a>
+        </div>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+
+      <!-- Auth Container -->
+      <div class="hero">
+        <div class="auth-container">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Login</button>
+            <button class="auth-tab" data-tab="signup">Sign Up</button>
+          </div>
+
+          <!-- Login Form -->
+          <form id="loginForm" class="auth-form active">
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <input type="email" id="loginEmail" required />
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" required />
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+          </form>
+
+          <!-- Signup Form -->
+          <form id="signupForm" class="auth-form">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" required />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" required />
+            </div>
+            <div class="form-group">
+              <label for="signupEmail">Email</label>
+              <input type="email" id="signupEmail" required />
+            </div>
+            <div class="form-group">
+              <label for="signupPassword">Password</label>
+              <input type="password" id="signupPassword" required />
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" id="confirmPassword" required />
+            </div>
+            <button type="submit" class="submit-btn">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <script>
+      // Tab switching functionality
+      const tabs = document.querySelectorAll(".auth-tab");
+      const forms = document.querySelectorAll(".auth-form");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          // Remove active class from all tabs and forms
+          tabs.forEach((t) => t.classList.remove("active"));
+          forms.forEach((f) => f.classList.remove("active"));
+
+          // Add active class to clicked tab and corresponding form
+          tab.classList.add("active");
+          document
+            .querySelector(`#${tab.dataset.tab}Form`)
+            .classList.add("active");
+        });
+      });
+
+      // Form submission handling
+      const loginForm = document.getElementById("loginForm");
+      const signupForm = document.getElementById("signupForm");
+
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        // Add your login logic here
+        console.log("Login submitted");
+      });
+
+      signupForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        // Add your signup logic here
+        console.log("Signup submitted");
+      });
+    </script>
+    <script src="../script.js"></script>
+  </body>
+</html>
