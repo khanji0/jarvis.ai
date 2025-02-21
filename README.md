@@ -32,8 +32,4 @@ project jarvis.ai/
 ├── README.md
 ```
 
-## Setup Instructions
-
-1. **Clone the repository:**
-
-✨ **Made with passion and creativity — Jarvis.AI**
+✨ **Made by Jibran A Khan**
