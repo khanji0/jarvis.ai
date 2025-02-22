@@ -34,7 +34,7 @@
           <a href="{{ url_for('about') }}">About</a>
           <a href="{{ url_for('contact') }}">Contact</a>
           <a href="{{ url_for('auth') }}" class="active">Login/Signup</a>
-      </div>
+        </div>
         <div class="hamburger">
           <span></span>
           <span></span>
@@ -92,75 +92,105 @@
     </header>
 
     <script>
+      // Tab switching functionality (keep existing code)
+      const tabs = document.querySelectorAll(".auth-tab");
+      const forms = document.querySelectorAll(".auth-form");
 
-  // Tab switching functionality (keep existing code)
-  const tabs = document.querySelectorAll(".auth-tab");
-  const forms = document.querySelectorAll(".auth-form");
-
-  tabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
           tabs.forEach((t) => t.classList.remove("active"));
           forms.forEach((f) => f.classList.remove("active"));
           tab.classList.add("active");
-          document.querySelector(`#${tab.dataset.tab}Form`).classList.add("active");
+          document
+            .querySelector(`#${tab.dataset.tab}Form`)
+            .classList.add("active");
+        });
       });
-  });
 
-  // Updated form handling
-  const loginForm = document.getElementById("loginForm");
-  const signupForm = document.getElementById("signupForm");
+      // Updated form handling
+      const loginForm = document.getElementById("loginForm");
+      const signupForm = document.getElementById("signupForm");
 
-  // Signup form handler
-  signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      
-      // Get form values
-      const userData = {
+      // Signup form handler
+      signupForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Get form values
+        const userData = {
           firstName: document.getElementById("firstName").value,
           lastName: document.getElementById("lastName").value,
           email: document.getElementById("signupEmail").value,
           password: document.getElementById("signupPassword").value,
-          confirmPassword: document.getElementById("confirmPassword").value
-      };
+          confirmPassword: document.getElementById("confirmPassword").value,
+        };
 
-      // Basic validation
-      if (userData.password !== userData.confirmPassword) {
+        // Basic validation
+        if (userData.password !== userData.confirmPassword) {
           alert("Passwords do not match!");
           return;
-      }
+        }
 
-      try {
-          // In the signup form handler, update the fetch URL
-        const response = await fetch('/api/signup', {  // Remove http://localhost:5002
-            method: 'POST',
+        try {
+          const response = await fetch("/api/signup", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify(userData)
-        });
+            body: JSON.stringify(userData),
+          });
 
           const data = await response.json();
 
           if (data.success) {
-              alert("Signup successful! Please login.");
-              // Switch to login tab
-              document.querySelector('[data-tab="login"]').click();
+            alert(data.message); // Show success message
+            // Switch to login tab
+            document.querySelector('[data-tab="login"]').click();
+            // Clear the signup form
+            signupForm.reset();
           } else {
-              alert(data.message || "Signup failed!");
+            alert(data.message || "Signup failed!");
           }
-      } catch (error) {
-          console.error('Error:', error);
+        } catch (error) {
+          console.error("Error:", error);
           alert("An error occurred during signup!");
-      }
-  });
+        }
+      });
 
-  // Login form handler (to be implemented)
-  loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      // Login logic will be implemented later
-      console.log("Login submitted");
-  });
-  </script>
+      // Login form handler
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Get login form values
+        const loginData = {
+          email: document.getElementById("loginEmail").value,
+          password: document.getElementById("loginPassword").value,
+        };
+
+        try {
+          const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(loginData),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            // Redirect to aichat.html upon successful login
+            window.location.href = "/aichat"; // Use the route instead of direct file path
+          } else {
+            alert(
+              data.message || "Login failed! Please check your credentials."
+            );
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred during login!");
+        }
+      });
+    </script>
     <script src="../static/script.js"></script>
   </body>
 </html>

@@ -1,6 +1,6 @@
 # auth_handler.py
 import sqlite3
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 def init_db():
@@ -52,3 +52,54 @@ def signup_user(username, email, password):
     except Exception as e:
         print(f"Database error: {str(e)}")
         return False, f"Database error: {str(e)}"
+
+def verify_user(email, password):
+    try:
+        db_path = os.path.join(os.path.dirname(__file__), 'user.db')
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+
+        # Get user with matching email
+        c.execute('SELECT password, username FROM users WHERE email = ?', (email,))
+        result = c.fetchone()
+
+        if result is None:
+            conn.close()
+            return False, "Email not found"
+
+        stored_password = result[0]
+        username = result[1]
+
+        # Verify password using werkzeug's check_password_hash
+        if check_password_hash(stored_password, password):
+            conn.close()
+            return True, "Login successful"
+        else:
+            conn.close()
+            return False, "Incorrect password"
+
+    except Exception as e:
+        print(f"Database error: {str(e)}")
+        return False, f"Database error: {str(e)}"
+
+def get_user_by_email(email):
+    try:
+        db_path = os.path.join(os.path.dirname(__file__), 'user.db')
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+
+        c.execute('SELECT id, username, email FROM users WHERE email = ?', (email,))
+        user = c.fetchone()
+        conn.close()
+
+        if user:
+            return {
+                'id': user[0],
+                'username': user[1],
+                'email': user[2]
+            }
+        return None
+
+    except Exception as e:
+        print(f"Database error: {str(e)}")
+        return None

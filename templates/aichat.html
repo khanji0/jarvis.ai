@@ -1,0 +1,73 @@
+<!-- aichat.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Assistant</title>
+    <!-- External Dependencies -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../static/styles.css" />
+  </head>
+  <body>
+    <!-- Main Header Section -->
+    <header class="header">
+      <!-- Background Video -->
+      <video class="background-video" autoplay muted loop preload="auto">
+        <source
+          src="{{ url_for('serve_gallery', filename='robot_dance.mp4') }}"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+      <script>
+        const video = document.querySelector(".background-video");
+
+        // Ensure seamless looping
+        video.addEventListener("ended", () => {
+          video.currentTime = 0; // Reset to the beginning
+          video.play(); // Start playing again
+        });
+      </script>
+
+      <!-- Navigation Bar -->
+      <nav class="main-nav">
+        <div class="logo">Jarvis.AI</div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('auth') }}" class="active">Logout</a>
+        </div>
+
+        <!-- Mobile Navigation Toggle -->
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+
+      <!-- Main Chat Interface -->
+      <div class="hero">
+        <div class="chat-container">
+          <!-- Chat Messages Display Area -->
+          <div class="chat-messages" id="chatMessages"></div>
+          <!-- User Input Area -->
+          <div class="chat-input-container">
+            <input
+              type="text"
+              id="userInput"
+              placeholder="Ask me anything..."
+            />
+            <button class="send-button" onclick="sendMessage()">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <script src="../static/script.js"></script>
+  </body>
+</html>

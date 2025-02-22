@@ -22,10 +22,15 @@ project jarvis.ai/
 │   ├── auth.html
 │   ├── contact.html
 │   └── about.html
+    └── aichat.html
 │
 ├── backend/
 │   └── database/
-│       └── db.py
+│       └── auth_handler.py
+        └── user.db
+├── model/
+│   ├── chatbot_model.py
+│
 │
 ├── app.py
 ├── requirements.txt
