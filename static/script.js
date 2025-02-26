@@ -2,43 +2,30 @@
    AI Chat Assistant Implementation - Jarvis
    Version: 1.0
    Purpose: Interactive AI Chat Interface
-   Author: [Your Name]
-   Last Updated: [Current Date]
    ========================================================================== */
 
-/* -----------------------------
-   Core AI Assistant Class
-   ---------------------------- */
 class AIAssistant {
-  /* -----------------------------
-         Constructor & Initialization
-         ---------------------------- */
   constructor() {
     // Initialize DOM elements
     this.chatMessages = document.getElementById("chatMessages");
     this.userInput = document.getElementById("userInput");
     this.sendButton = document.querySelector(".send-button");
+    this.voiceButton = document.querySelector(".voice-button");
 
     // Set up initial state
     this.initializeEventListeners();
     this.initializeWelcomeMessage();
   }
 
-  /* -----------------------------
-         Welcome Message Handler
-         ---------------------------- */
   initializeWelcomeMessage() {
     setTimeout(() => {
       this.addMessageToChat(
-        "Hello! I'm Jarvis. How can I assist you today?",
+        "Welcome to Jarvis. How can I assist you today?",
         "ai-message"
       );
     }, 1000);
   }
 
-  /* -----------------------------
-         Event Listeners Setup
-         ---------------------------- */
   initializeEventListeners() {
     // Handle Enter key press
     this.userInput.addEventListener("keypress", (e) => {
@@ -51,6 +38,13 @@ class AIAssistant {
     this.sendButton.addEventListener("click", () => {
       this.handleUserMessage();
     });
+
+    // Handle voice button clicks
+    if (this.voiceButton) {
+      this.voiceButton.addEventListener("click", () => {
+        this.startVoiceRecognition();
+      });
+    }
 
     // Set initial focus
     this.userInput.focus();
@@ -66,28 +60,22 @@ class AIAssistant {
     }
   }
 
-  /* -----------------------------
-         Message Processing
-         ---------------------------- */
+  // Voice recognition method
+  startVoiceRecognition() {
+    window.location.href = "/voice";
+  }
+
   handleUserMessage() {
     const message = this.userInput.value.trim();
     if (!message) return;
 
-    // Process and display user message
     this.addMessageToChat(message, "user-message");
     this.showTypingIndicator();
-
-    // Send the message to the backend for AI response
     this.sendMessageToServer(message);
-
-    // Reset input
     this.userInput.value = "";
     this.scrollToBottom();
   }
 
-  /* -----------------------------
-         UI Message Display Functions
-         ---------------------------- */
   addMessageToChat(message, className) {
     const messageDiv = document.createElement("div");
     messageDiv.className = `message ${className}`;
@@ -96,19 +84,16 @@ class AIAssistant {
     this.scrollToBottom();
   }
 
-  /* -----------------------------
-         Typing Indicator Management
-         ---------------------------- */
   showTypingIndicator() {
     const typingDiv = document.createElement("div");
     typingDiv.className = "message ai-message typing-indicator";
     typingDiv.innerHTML = `
-              <div class="typing-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-              </div>
-          `;
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      `;
     typingDiv.id = "typingIndicator";
     this.chatMessages.appendChild(typingDiv);
     this.scrollToBottom();
@@ -121,9 +106,6 @@ class AIAssistant {
     }
   }
 
-  /* -----------------------------
-         Sending Message to Backend
-         ---------------------------- */
   sendMessageToServer(message) {
     fetch("/api/chat", {
       method: "POST",
@@ -136,7 +118,6 @@ class AIAssistant {
       .then((data) => {
         this.removeTypingIndicator();
         if (data.success) {
-          // Remove the "Jarvis: " prefix if it's already in the response
           let aiResponse = data.ai_response;
           if (aiResponse.startsWith("Jarvis: ")) {
             aiResponse = aiResponse.substring(8);
@@ -159,23 +140,15 @@ class AIAssistant {
       });
   }
 
-  /* -----------------------------
-         Utility Functions
-         ---------------------------- */
   scrollToBottom() {
     this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
   }
 }
 
-/* -----------------------------
-     Application Initialization
-     ---------------------------- */
+// Application Initialization
 document.addEventListener("DOMContentLoaded", () => {
   try {
-    // Initialize AI Assistant
     const assistant = new AIAssistant();
-
-    // Global message handler
     window.sendMessage = () => {
       try {
         assistant.handleUserMessage();
@@ -183,16 +156,13 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error handling message:", error);
       }
     };
-
     console.log("AI Assistant initialized successfully");
   } catch (error) {
     console.error("Error initializing AI Assistant:", error);
   }
 });
 
-/* -----------------------------
-     Cleanup Operations
-     ---------------------------- */
+// Cleanup Operations
 window.addEventListener("beforeunload", () => {
   try {
     const video = document.querySelector(".background-video");

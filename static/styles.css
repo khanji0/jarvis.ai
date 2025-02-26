@@ -210,6 +210,7 @@ body {
   flex: 1;
   padding: 15px;
   border: none;
+  border: 2px solid black; /* Added black border */
   border-radius: var(--border-radius);
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-light);
@@ -218,7 +219,7 @@ body {
 }
 
 #userInput::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 /* Send Button */
@@ -241,6 +242,27 @@ body {
   font-size: 1.2rem;
 }
 
+/* voice button */
+
+.voice-button {
+  background: var(--primary-color);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0 20px;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.voice-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px var(--primary-color);
+}
+
+.voice-button i {
+  color: var(--text-dark);
+  font-size: 1.2rem;
+}
+
 /* -----------------------------
    Message Styles
    ---------------------------- */
@@ -257,11 +279,14 @@ body {
   background: var(--primary-color);
   color: var(--text-dark);
   margin-left: auto;
+  border: 2px solid black; /* Added black border */
 }
 
 .ai-message {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-light);
+  border: 2px solid black; /* Added black border */
+
   margin-right: auto;
 }
 
@@ -596,8 +621,6 @@ body {
   }
 }
 
-
-
 /* ==========================================================================
    Java Chat Demo - Styles for Chat Interface
    ========================================================================== */
@@ -605,72 +628,73 @@ body {
 /* -----------------------------
    Typing Indicator Styles
    ---------------------------- */
-   .typing-indicator {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: var(--primary-color);
-    font-style: italic;
-    font-size: 0.9rem;
-    padding: 10px;
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--primary-color);
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 10px;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  animation: typingDot 1s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingDot {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
   }
-  
-  .typing-dots {
-    display: flex;
-    gap: 4px;
+  30% {
+    transform: translateY(-4px);
   }
-  
-  .typing-dots span {
-    width: 8px;
-    height: 8px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    animation: typingDot 1s infinite ease-in-out;
-  }
-  
-  .typing-dots span:nth-child(1) {
-    animation-delay: 0s;
-  }
-  
-  .typing-dots span:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  
-  .typing-dots span:nth-child(3) {
-    animation-delay: 0.4s;
-  }
-  
-  @keyframes typingDot {
-    0%, 60%, 100% {
-      transform: translateY(0);
-    }
-    30% {
-      transform: translateY(-4px);
-    }
-  }
-  
-  /* -----------------------------
+}
+
+/* -----------------------------
      Message Animation Styles
      ---------------------------- */
-  .message {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: messageAppear 0.3s forwards;
+.message {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: messageAppear 0.3s forwards;
+}
+
+@keyframes messageAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  @keyframes messageAppear {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* ==========================================================================
+}
+
+/* ==========================================================================
      Notes:
      - This CSS is specifically designed for the Java Chat Demo.
      - The typing indicator includes animated dots for a better user experience.
      - The message animation ensures smooth transitions for new messages.
      ========================================================================== */
 
-
-     
+/* voice effect */

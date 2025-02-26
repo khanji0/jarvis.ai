@@ -50,7 +50,7 @@ def get_jarvis_response(user_input):
                 {"role": "user", "content": user_input}
             ],
             model=model_name,
-            max_tokens=150,  # Adjust as needed
+            max_tokens=250,  # Adjust as needed
             stream=False  # Changed to False for simpler handling
         )
 
